@@ -353,6 +353,12 @@ func Parse(argList []string) ParserResult {
 
 		"-Wl,-dead_strip": {0, pr.warningLinkUnaryCallback},
 		"-dead_strip":     {0, pr.warningLinkUnaryCallback}, //iam: tor does this. We lose the bitcode :-(
+
+		"-mthumb":               {0, pr.compileUnaryCallback},
+		"-mno-unaligned-access": {0, pr.compileUnaryCallback},
+		"-mstrict-align":        {0, pr.compileUnaryCallback},
+		"-mno-outline-atomics":  {0, pr.compileUnaryCallback},
+		"-mgeneral-regs-only":   {0, pr.compileUnaryCallback},
 	}
 
 	// iam: this is a list because matching needs to be done in order.
@@ -404,6 +410,9 @@ func Parse(argList []string) ParserResult {
 		{`^.+\.(So|so)(\.\d)+$`, flagInfo{0, pr.objectFileCallback}},
 
 		{`^--target=.+$`, flagInfo{0, pr.compileLinkUnaryCallback}},
+
+		{`^-mcpu=.+$`, flagInfo{0, pr.compileUnaryCallback}},       //iam: linux kernel stuff
+		{`^-mfloat-abi=.+$`, flagInfo{0, pr.compileUnaryCallback}}, //iam: linux kernel stuff
 	}
 
 	for len(argList) > 0 {
