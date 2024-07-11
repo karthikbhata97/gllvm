@@ -64,16 +64,11 @@ tools such as `objcopy` and `ld`.
 
 To install, simply do (making sure to include those `...`)
 ```
-go get github.com/SRI-CSL/gllvm/cmd/...
+go install github.com/SRI-CSL/gllvm/cmd/...@latest
 ```
-This should install five binaries: `gclang`, `gclang++`, `gflang`, `get-bc`, and `gsanity-check`
-in the `$GOPATH/bin` directory.
+This should install six binaries: `gclang`, `gclang++`, `gflang`, `get-bc`, `gparse`, and `gsanity-check`
+in the `$GOPATH/bin` directory. 
 
-If you are using `go 1.16` you may be forced to install it like this:
-```
-GO111MODULE=off go get github.com/SRI-CSL/gllvm/cmd/...
-```
-Hopefully we will have a better fix for this [soon](https://github.com/golang/go/issues/44776)?
 ## Usage
 
 `gclang` and
@@ -81,7 +76,7 @@ Hopefully we will have a better fix for this [soon](https://github.com/golang/go
 `gflang` is the wrapper used to compile Fortran.
 `get-bc` is used for
 extracting the bitcode from a build product (either an object file, executable, library
-or archive). `gsanity-check` can be used for detecting configuration errors.
+or archive). `gsanity-check` can be used for detecting configuration errors. `gparse` can be used to examine how `gllvm` parses compiler/linker lines.
 
 Here is a simple example. Assuming that clang is in your `PATH`, you can build
 bitcode for `pkg-config` as follows:
