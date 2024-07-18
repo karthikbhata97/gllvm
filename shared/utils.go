@@ -37,6 +37,7 @@ import (
 	"bytes"
 	"os"
 	"os/exec"
+	"strings"
 )
 
 // Executes a command then returns true for success, false if there was an error, err is either nil or the error.
@@ -88,4 +89,21 @@ func dedupeStrings(strings *[]string) {
 		}
 	}
 	*strings = (*strings)[:count]
+}
+
+// Skip the strings in allStrings that matches with the substr
+func skipMatching(allStrings *[]string, substr string) {
+	if substr == "" {
+		return
+	}
+	count := 0
+	for _, s := range *allStrings {
+		if !strings.Contains(s, substr) {
+			(*allStrings)[count] = s
+			count++
+		} else {
+			LogInfo("Dropping: %v\n", s)
+		}
+	}
+	*allStrings = (*allStrings)[:count]
 }

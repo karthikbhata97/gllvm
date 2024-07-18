@@ -68,6 +68,7 @@ type ExtractionArgs struct {
 	ArchiverName        string
 	ArArgs              []string
 	Extractor           func(string) ([]string, bool)
+	SkipMatching        string
 }
 
 // for printing out the parsed arguments, some have been skipped.
@@ -108,6 +109,7 @@ func ParseSwitches(args []string) (ea ExtractionArgs) {
 	flagSet.IntVar(&ea.LinkArgSize, "n", 0, "maximum llvm-link command line size (in bytes)")
 	flagSet.BoolVar(&ea.KeepTemp, "t", false, "keep temporary linking folder")
 	flagSet.BoolVar(&ea.StrictExtract, "S", false, "exit with an error if extraction fails")
+	flagSet.StringVar(&ea.SkipMatching, "x", "", "skip the bitcode files with paths matching the string (comma separate for multiple items)")
 
 	err := flagSet.Parse(args[1:])
 
@@ -287,6 +289,12 @@ func handleExecutable(ea ExtractionArgs) (success bool) {
 
 	// Deduplicate any files to link
 	dedupeStrings(&filesToLink)
+
+	// Remove files based on SkipMatching
+	skipList := strings.Split(ea.SkipMatching, ",")
+	for _, s := range skipList {
+		skipMatching(&filesToLink, s)
+	}
 
 	// Write manifest
 	if ea.WriteManifest {
